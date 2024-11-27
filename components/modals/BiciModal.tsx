@@ -22,6 +22,8 @@ type BicycleModalProps = {
 const BicycleModal: React.FC<BicycleModalProps> = ({ visible, onClose, bicycleId }) => {
   const [isDamaged, setIsDamaged] = useState(false);
   const [loading, setLoading] = useState(false);
+  const ip = '192.168.100.8';
+  const baseURL = `http://${ip}:8069/api/bicis`;
 
   useEffect(() => {
     if (visible) {
@@ -32,8 +34,7 @@ const BicycleModal: React.FC<BicycleModalProps> = ({ visible, onClose, bicycleId
   const fetchBicycleStatus = async () => {
     setLoading(true);
     try {
-      const ip = '192.168.100.6';
-      const baseURL = `http://${ip}:8069/api/bicis`;
+
       const url = `${baseURL}/${encodeURIComponent(bicycleId)}/averiado`; // Ruta correcta para el GET
       const response = await axios.get(url);
       setIsDamaged(response.data);
@@ -47,8 +48,6 @@ const BicycleModal: React.FC<BicycleModalProps> = ({ visible, onClose, bicycleId
   const updateBicycleStatus = async () => {
     setLoading(true);
     try {
-      const ip = '192.168.100.6';
-      const baseURL = `http://${ip}:8069/api/bicis`;
       const url = `${baseURL}/${encodeURIComponent(bicycleId)}/averiado`; // Ruta correcta para el PATCH
       await axios.patch(url, null, {
         params: { averiada: isDamaged },

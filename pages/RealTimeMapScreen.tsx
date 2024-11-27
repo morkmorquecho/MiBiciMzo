@@ -34,6 +34,9 @@ export default function RealTimeMapScreen() {
   const [bikePosition, setBikePosition] = useState(bikeLocation);
   const [previousPosition, setPreviousPosition] = useState(bikeLocation);
   const [timer, setTimer] = useState(null);
+  const ip = '192.168.100.8';
+  const baseURL = `http://${ip}:8069/api/bicis`;
+  const baseURL2 = `http://${ip}:8069/api/bicipuertos`;
 
 
   //DETERMINAR SI UNA BICI FUE ROBADA POR EL TIEMPO ESTATICA
@@ -43,8 +46,6 @@ useEffect(() => {
     if (!timer) {
       const newTimer = setTimeout(async () => {
         try {
-          const ip = '192.168.100.6'; // Cambiar por la IP adecuada
-          const baseURL = `http://${ip}:8069/api/bicis`;
           const response = await axios.patch(`${baseURL}/1/robo`, null, {
             params: { robado: true }, // Parámetro para indicar el estado de robo
           });
@@ -54,7 +55,7 @@ useEffect(() => {
         } finally {
           setTimer(null); // Reinicia el temporizador
         }
-      }, 15000); // 15 segundos
+      }, 30000); // 30 segundos
       setTimer(newTimer);
     }
   } else {
@@ -114,9 +115,7 @@ useEffect(() => {
     setLoading(true);
 
     try {
-      const ip = '192.168.100.6';
-      const baseURL = `http://${ip}:8069/api/bicipuertos`;
-      const url = `${baseURL}/${encodeURIComponent(bicipuerto.title)}/bicis-disponibles`;
+      const url = `${baseURL2}/${encodeURIComponent(bicipuerto.title)}/bicis-disponibles`;
 
       const response = await axios.get(url);
       setBicisDisponibles(response.data);
